@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:instagram_flutter/functions/firestore_method.dart';
 import 'package:instagram_flutter/models/user.dart';
 import 'package:instagram_flutter/providers/user_provider.dart';
+import 'package:instagram_flutter/screens/comment_screen.dart';
 import 'package:instagram_flutter/utils/colors.dart';
 import 'package:instagram_flutter/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
@@ -135,7 +137,12 @@ class _PostCardState extends State<PostCard> {
                         Icon(FontAwesomeIcons.heart,)
                 )
               ),
-              IconButton(onPressed: (){}, icon: Icon(FontAwesomeIcons.comment)),
+              IconButton(
+                  onPressed: (){
+                    Navigator.of(context).push(CupertinoPageRoute(builder: (context)=> CommentScreen()),);
+                  },
+                  icon: Icon(FontAwesomeIcons.comment)
+              ),
               IconButton(onPressed: (){}, icon: Icon(FontAwesomeIcons.paperPlane)),
 
               Expanded(
