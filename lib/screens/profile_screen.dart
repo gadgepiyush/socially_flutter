@@ -35,24 +35,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isLoading = true;
     });
     try {
-      var userSnap = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(widget.uid)
-          .get();
+      var userSnap = await FirebaseFirestore.instance.collection('users').doc(widget.uid).get();
 
       // get post length
-      var postSnap = await FirebaseFirestore.instance
-          .collection('posts')
-          .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-          .get();
+      var postSnap = await FirebaseFirestore.instance.collection('posts').where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
 
       postLen = postSnap.docs.length;
       userData = userSnap.data()!;
       followers = userSnap.data()!['followers'].length;
       following = userSnap.data()!['following'].length;
-      isFollowing = userSnap
-          .data()!['followers']
-          .contains(FirebaseAuth.instance.currentUser!.uid);
+      isFollowing = userSnap.data()!['followers'].contains(FirebaseAuth.instance.currentUser!.uid);
       setState(() {});
     } catch (e) {
       showSnackBar(e.toString(), context);
@@ -106,11 +98,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                           Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              FirebaseAuth.instance.currentUser!.uid ==
-                                  widget.uid
+                              FirebaseAuth.instance.currentUser!.uid == widget.uid
                                   ? FollowButton(
                                 text: 'Sign Out',
                                 backgroundColor:
@@ -154,8 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 textColor: Colors.white,
                                 borderColor: Colors.blue,
                                 function: () async {
-                                  await FireStoreMethods()
-                                      .followUser(
+                                  await FireStoreMethods().followUser(
                                     FirebaseAuth.instance
                                         .currentUser!.uid,
                                     userData['uid'],
@@ -174,23 +163,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ],
                 ),
+
                 Container(
                   alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(
-                    top: 15,
-                  ),
+                  padding: const EdgeInsets.only(top: 15,),
                   child: Text(
                     userData['username'],
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
+
                 Container(
                   alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(
-                    top: 1,
-                  ),
+                  padding: const EdgeInsets.only(top: 1,),
                   child: Text(
                     userData['bio'],
                   ),
@@ -198,12 +185,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           ),
+
           const Divider(),
+
           FutureBuilder(
-            future: FirebaseFirestore.instance
-                .collection('posts')
-                .where('uid', isEqualTo: widget.uid)
-                .get(),
+            future: FirebaseFirestore.instance.collection('posts').where('uid', isEqualTo: widget.uid).get(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(

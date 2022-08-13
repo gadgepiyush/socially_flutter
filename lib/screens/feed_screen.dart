@@ -5,13 +5,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:instagram_flutter/utils/colors.dart';
 import 'package:instagram_flutter/widgets/post_card.dart';
 
+import '../utils/global_var.dart';
+
 class FeedScreen extends StatelessWidget {
   const FeedScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      appBar: AppBar(
+      backgroundColor : width > webScreenSize ? webBackgroundColor : mobileBackgroundColor,
+      appBar: width > webScreenSize ? null :
+       AppBar(
         backgroundColor: mobileBackgroundColor,
         centerTitle: false,
         title: Text(
@@ -34,8 +40,14 @@ class FeedScreen extends StatelessWidget {
 
           return ListView.builder(
               itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index)=>  PostCard(
-                snap : snapshot.data!.docs[index].data(),
+              itemBuilder: (context, index)=>  Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: width > webScreenSize ? width * 0.3 : 0,
+                  vertical: width > webScreenSize ? 15 : 0,
+                ),
+                child: PostCard(
+                  snap : snapshot.data!.docs[index].data(),
+                ),
               )
           );
         },

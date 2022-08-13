@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram_flutter/screens/profile_screen.dart';
 import 'package:instagram_flutter/utils/colors.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
+
+import '../utils/global_var.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -62,11 +65,20 @@ class _SearchScreenState extends State<SearchScreen> {
           return ListView.builder(
               itemCount: (snapshot.data! as dynamic).docs.length,
               itemBuilder: (context, index){
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage((snapshot.data! as dynamic).docs[index]['photoUrl'])
+                return InkWell(
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => ProfileScreen(
+                        uid: (snapshot.data! as dynamic).docs[index]['uid'],
+                      ),
+                    ),
                   ),
-                  title: Text((snapshot.data! as dynamic).docs[index]['username'])
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage((snapshot.data! as dynamic).docs[index]['photoUrl'])
+                    ),
+                    title: Text((snapshot.data! as dynamic).docs[index]['username'])
+                  ),
                 );
               });
         },
@@ -83,9 +95,14 @@ class _SearchScreenState extends State<SearchScreen> {
                 itemBuilder: (context, index) => Image.network(
                     (snapshot.data! as dynamic).docs[index]['postUrl']
                 ),
-                staggeredTileBuilder: (int index) => StaggeredTile.count(
-                    (index%7==0)? 2:1 , (index%7==0)? 2:1
-                ),
+              staggeredTileBuilder: (index) => MediaQuery.of(context)
+                  .size
+                  .width >
+                  webScreenSize
+                  ? StaggeredTile.count(
+                  (index % 7 == 0) ? 1 : 1, (index % 7 == 0) ? 1 : 1)
+                  : StaggeredTile.count(
+                  (index % 7 == 0) ? 2 : 1, (index % 7 == 0) ? 2 : 1),
 
                 mainAxisSpacing: 8,
                 crossAxisSpacing: 8,
